@@ -18,15 +18,43 @@ import { Kbd } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
 
 import Landing from './components/general/Landing';
+import UserPage from './components/UserPage';
+import CasePage from './components/CasePage';
+import AllCases from './components/AllCases';
+import NewCase from './components/NewCase';
 import NotFound from './components/NotFound';
 import Login from './components/general/Login';
 import Register from './components/general/Register';
 import NotFoundExternal from './components/NotFoundExternal';
-import UserPage from './components/UserPage';
 
 import GuardedRoute from './components/helper/GuardedRoute';
 import Guarded404 from './components/helper/Guarded404';
 import GuardedJudge from './components/helper/GuardedJudge.js';
+
+import { SpotlightProvider, useSpotlight } from '@mantine/spotlight';
+
+const actions = [
+  {
+    title: 'Home',
+    description: 'Get to home page',
+    onTrigger: () => (window.location.pathname = '/'),
+  },
+  {
+    title: 'Profile',
+    description: 'Your user profile',
+    onTrigger: () => (window.location.pathname = '/profile'),
+  },
+  {
+    title: 'All Cases',
+    description: 'Browse all cases',
+    onTrigger: () => (window.location.pathname = '/cases'),
+  },
+  {
+    title: 'Register Case',
+    description: 'Register a new case (judges only)',
+    onTrigger: () => (window.location.pathname = '/registercase'),
+  },
+];
 
 function App() {
   const [colorScheme, setColorScheme] = useState('dark');
@@ -61,47 +89,78 @@ function App() {
         }}
         withGlobalStyles
       >
-        <Router>
-          <div className="App">
-            <div
-              className="fixed z-5 top-0 right-0 m-3 grid align-items-center"
-              style={{ gap: '0.5rem' }}
-            >
-              <Kbd>Ctrl</Kbd> + <Kbd>J</Kbd>
-              <ActionIcon
-                variant="outline"
-                color={dark ? 'yellow' : 'blue'}
-                onClick={() => toggleColorScheme()}
-                title="Toggle color scheme"
-                size="xl"
+        <SpotlightProvider
+          actions={actions}
+          searchIcon={<MagnifyingGlassIcon size={18} />}
+          searchPlaceholder="Search..."
+          nothingFoundMessage="Nothing found..."
+        >
+          <Router>
+            <div className="App">
+              <div
+                className="fixed z-5 top-0 right-0 m-3 grid align-items-center"
+                style={{ gap: '0.5rem' }}
               >
-                {dark ? <SunIcon size={18} /> : <MoonIcon size={18} />}
-              </ActionIcon>
+                <Kbd>Ctrl</Kbd> + <Kbd>J</Kbd>
+                <ActionIcon
+                  variant="outline"
+                  color={dark ? 'yellow' : 'blue'}
+                  onClick={() => toggleColorScheme()}
+                  title="Toggle color scheme"
+                  size="xl"
+                >
+                  {dark ? <SunIcon size={18} /> : <MoonIcon size={18} />}
+                </ActionIcon>
+              </div>
+              <Routes>
+                <Route
+                  path="*"
+                  element={
+                    <Guarded404>
+                      <NotFound />
+                    </Guarded404>
+                  }
+                />
+                <Route path="/not-found" element={<NotFoundExternal />} />
+                <Route path="/" element={<Landing />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route
+                  path="/cases"
+                  element={
+                    <GuardedRoute>
+                      <AllCases />
+                    </GuardedRoute>
+                  }
+                />
+                <Route
+                  path="/registercase"
+                  element={
+                    <GuardedJudge>
+                      <NewCase />
+                    </GuardedJudge>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <GuardedRoute>
+                      <UserPage />
+                    </GuardedRoute>
+                  }
+                />
+                <Route
+                  path="/cases/:id"
+                  element={
+                    <GuardedRoute>
+                      <CasePage />
+                    </GuardedRoute>
+                  }
+                />
+              </Routes>
             </div>
-            <Routes>
-              <Route
-                path="*"
-                element={
-                  <Guarded404>
-                    <NotFound />
-                  </Guarded404>
-                }
-              />
-              <Route path="/not-found" element={<NotFoundExternal />} />
-              <Route path="/" element={<Landing />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route
-                path="/profile"
-                element={
-                  <GuardedRoute>
-                    <UserPage />
-                  </GuardedRoute>
-                }
-              />
-            </Routes>
-          </div>
-        </Router>
+          </Router>
+        </SpotlightProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   );
