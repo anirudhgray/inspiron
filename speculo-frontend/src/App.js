@@ -18,11 +18,15 @@ import { Kbd } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
 
 import Landing from './components/general/Landing';
+import NotFound from './components/NotFound';
 import Login from './components/general/Login';
 import Register from './components/general/Register';
+import NotFoundExternal from './components/NotFoundExternal';
 import UserPage from './components/UserPage';
 
 import GuardedRoute from './components/helper/GuardedRoute';
+import Guarded404 from './components/helper/Guarded404';
+import GuardedJudge from './components/helper/GuardedJudge.js';
 
 function App() {
   const [colorScheme, setColorScheme] = useState('dark');
@@ -75,6 +79,15 @@ function App() {
               </ActionIcon>
             </div>
             <Routes>
+              <Route
+                path="*"
+                element={
+                  <Guarded404>
+                    <NotFound />
+                  </Guarded404>
+                }
+              />
+              <Route path="/not-found" element={<NotFoundExternal />} />
               <Route path="/" element={<Landing />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
