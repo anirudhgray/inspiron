@@ -98,7 +98,9 @@ def updatecase(case_id):
     if request.method == "PATCH":
         data = json.loads(request.data)
         case = {"case_name": data['case_name'],
+                "details": data['details'],
                 "judge_name": data['judge_name'],
+                "courtroom": data['courtroom'],
                 "prosecuting_party": data['prosecuting_party'],
                 "defending_party": data['defending_party'],
                 "prosecuting_lawyer": data['prosecuting_lawyer'],
@@ -143,7 +145,9 @@ def newcase():
     if request.method == "POST":
         data = json.loads(request.data)
         case = {"case_name": data['case_name'],
+                "details": data['details'],
                 "judge_name": data['judge_name'],
+                "courtroom": data['courtroom'],
                 "prosecuting_party": data['prosecuting_party'],
                 "defending_party": data['defending_party'],
                 "prosecuting_lawyer": data['prosecuting_lawyer'],
