@@ -121,6 +121,23 @@ def updatecase(case_id):
         return jsonify(case)
 
 
+@app.route("/courtcases/count", methods=['GET'])
+def count():
+    pending = 0
+    completed = 0
+    data = json.loads(request.data)
+    user = auth.refresh(data['refresh_token'])
+    cases = db.child("cases").get(user['idToken']).val()
+    for case in cases:
+        sub_case = db.child("cases").child(case).get(user['idToken']).val()
+        status = sub_case['status']
+        if status == "active":
+            pending += 1
+        elif status == "completed":
+            completed += 1
+    return jsonify({"pending": pending, "completed": completed})
+
+
 @app.route("/newcase", methods=['POST'])
 def newcase():
     if request.method == "POST":
