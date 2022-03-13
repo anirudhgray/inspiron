@@ -39,7 +39,7 @@ export default function UserPage() {
       const caseName = data.casesOfInterest[i].title;
       const caseID = data.casesOfInterest[i]._id;
       const n_case_updates = data.casesOfInterest[i].courtUpdates.length;
-      for (let j = 0; j < n_case_updates; j++) {
+      for (let j = n_case_updates - 1; j >= 0; j--) {
         updates.push(
           <tr
             style={{ cursor: 'pointer' }}
