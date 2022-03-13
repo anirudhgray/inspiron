@@ -68,8 +68,8 @@ router.get('/courtcases/updates', auth, async (req, res) => {
 
 router.get('/courtcases/count', async (req, res) => {
   try {
-    const completed = await CourtCase.countDocuments({ closed: false });
-    const pending = await CourtCase.countDocuments({ closed: true });
+    const completed = await CourtCase.countDocuments({ closed: true });
+    const pending = await CourtCase.countDocuments({ closed: false });
     res.status(200).send({ completed, pending });
   } catch (e) {
     res.status(500).send(e);
